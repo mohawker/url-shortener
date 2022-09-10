@@ -14,7 +14,7 @@ app.post('/api/create-short-url', async (req, res) => {
   try {
     const longUrl = req.body.url;
     if (validUrl.isUri(longUrl)) {
-      // Insert check if url already in DB
+      // Check
       const getUrlResults = await pool.query(
         `SELECT short_url_code FROM links WHERE long_url='${longUrl}' LIMIT 1`
       );
@@ -56,10 +56,6 @@ app.get('/:code', async (req, res) => {
     return res.json({ message: `Error Message: ${err}`, type: 'failure' });
   }
 });
-
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dir))
-// })
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () =>
