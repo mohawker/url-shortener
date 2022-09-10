@@ -1,9 +1,11 @@
 const express = require('express');
 const shortid = require('shortid');
 const validUrl = require('valid-url');
+const cors = require('cors');
 const pool = require('./db');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // ROUTES
@@ -17,8 +19,10 @@ app.post('/api/create-short-url', async (req, res) => {
         `SELECT short_url_code FROM links WHERE long_url='${longUrl}' LIMIT 1`
       );
       if (getUrlResults.rows.length != 0) {
+        const shortUrlCode = getUrlResults.rows[0].short_url_code;
         return res.json({
-          message: `URL was shortened before. Short URL Code is: ${getUrlResults.rows[0].short_url}`,
+          message: `URL was shortened before. Short URL Code is: ${shortUrlCode}`,
+          code: shortUrlCode,
           type: 'success',
         });
       }
@@ -28,7 +32,8 @@ app.post('/api/create-short-url', async (req, res) => {
         `INSERT INTO links(long_url,short_url_code) VALUES ('${longUrl}', '${shortUrlCode}')`
       );
       res.json({
-        message: `${shortUrlCode}`,
+        message: `Long URL ${longUrl} shortened to Short URL Code ${shortUrlCode}`,
+        code: shortUrlCode,
         type: 'success',
       });
     } else {
@@ -56,7 +61,7 @@ app.get('/:code', async (req, res) => {
 //   res.sendFile(path.join(__dir))
 // })
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () =>
   console.log(`URL Shortener server started, listening at PORT ${PORT}`)
 );
