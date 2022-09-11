@@ -10,13 +10,14 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  flex: 1;
 }
 
 .homepage-stack {
   text-align: center;
-  background-color: #282c34;
-  min-height: 100vh;
-  padding: 5vh 10vw;
+  padding: 5vh 5vw;
+  min-height: 100%;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,4 +27,13 @@
 
 .url-input-field {
   width: 100%;
+}
+
+.short-url-paper {
+  width: 100%;
+}
+
+.footer {
+  min-height: 10vh;
+  margin-top: auto;
 }
