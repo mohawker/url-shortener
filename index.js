@@ -16,24 +16,26 @@ app.post('/api/create-short-url', async (req, res) => {
     if (validUrl.isUri(longUrl)) {
       // Check
       const getUrlResults = await pool.query(
-        `SELECT short_url_code FROM links WHERE long_url='${longUrl}' LIMIT 1`
+        `SELECT short_url FROM links WHERE long_url='${longUrl}' LIMIT 1`
       );
       if (getUrlResults.rows.length != 0) {
-        const shortUrlCode = getUrlResults.rows[0].short_url_code;
+        const shortUrl = getUrlResults.rows[0].short_url;
         return res.json({
-          message: `URL was shortened before. Short URL Code is: ${shortUrlCode}`,
-          code: shortUrlCode,
+          message: `URL was shortened before. Short URL is: ${shortUrl}`,
+          short_url: shortUrl,
           type: 'success',
         });
       }
       // If not in DB, create Short URL Code
       const shortUrlCode = shortid.generate();
+      const shortUrl =
+        req.protocol + '://' + req.get('host') + '/' + shortUrlCode;
       await pool.query(
-        `INSERT INTO links(long_url,short_url_code) VALUES ('${longUrl}', '${shortUrlCode}')`
+        `INSERT INTO links(long_url,short_url_code,short_url) VALUES ('${longUrl}', '${shortUrlCode}', '${shortUrl}')`
       );
       res.json({
-        message: `Long URL ${longUrl} shortened to Short URL Code ${shortUrlCode}`,
-        code: shortUrlCode,
+        message: `Long URL ${longUrl} shortened to Short URL ${shortUrl}`,
+        short_url: shortUrl,
         type: 'success',
       });
     } else {

@@ -25,10 +25,6 @@ import 'aos/dist/aos.css';
 import { TypeAnimation } from 'react-type-animation';
 
 const axios = require('axios');
-const PROD_BASE_URL =
-  'https://shorten-this-url-please.herokuapp.com/api/create-short-url';
-const DEV_BASE_URL = 'http://localhost:4000/';
-
 function App() {
   const darkTheme = createTheme({
     palette: {
@@ -69,24 +65,23 @@ function App() {
   };
 
   const generateShortURL = (e) => {
-    const shortenURL = DEV_BASE_URL + 'api/create-short-url';
     setIsLoading(true);
     axios
-      .post(shortenURL, { url: longURL })
+      .post('/api/create-short-url', { url: longURL })
       .then(function (res) {
         const res_type = res.data.type;
-        const res_code = res.data.code;
-        if (res_type === 'failure' || res_code === undefined) {
+        const shortURL = res.data.short_url;
+        if (res_type === 'failure' || shortURL === undefined) {
           const res_message = res.data.message;
           setShortURL('');
           setErrorMessage(res_message);
           setTextFieldColor('error');
           setError(true);
         } else {
-          const short_url = DEV_BASE_URL + res_code;
-          setShortURL(short_url);
+          setShortURL(shortURL);
           setErrorMessage('');
           setTextFieldColor('success');
+          setError(false);
         }
       })
       .catch(function (err) {
@@ -179,7 +174,7 @@ function App() {
           />
           {shortURL ? (
             <div data-aos='fade-up' className='short-url-paper'>
-              <Paper elevation='2' sx={{ width: '100%', padding: 5 }}>
+              <Paper elevation={2} sx={{ width: '100%', padding: 5 }}>
                 <Stack spacing={1}>
                   <Typography variant='h6'>
                     Your URL was shortened successfully!
