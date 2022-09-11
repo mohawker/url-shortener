@@ -3,10 +3,18 @@ const shortid = require('shortid');
 const validUrl = require('valid-url');
 const cors = require('cors');
 const pool = require('./db');
+const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// CLIENT
+if (process.env.NODE_ENV === 'production') {
+  //server static content
+  //npm run build
+  app.use(express.static(path.join(__dirname, 'client/build')));
+}
 
 // ROUTES
 // POST: Create short_url Code given long_url
@@ -57,6 +65,11 @@ app.get('/:code', async (req, res) => {
   } catch (err) {
     return res.json({ message: `Error Message: ${err}`, type: 'failure' });
   }
+});
+
+// Catch all other invalid routes and redirect to homepage
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/build/index.html'));
 });
 
 const PORT = process.env.PORT || 4000;
