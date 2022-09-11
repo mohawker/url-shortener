@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
-import SnackBar from '@mui/material/SnackBar';
+import Snackbar from '@mui/material/Snackbar';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SendIcon from '@mui/icons-material/Send';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -197,7 +197,7 @@ function App() {
           )}
         </Stack>
       </Container>
-      <SnackBar
+      <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
         onClose={handleSnackbarClose}
