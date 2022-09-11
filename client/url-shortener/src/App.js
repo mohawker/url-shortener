@@ -14,7 +14,6 @@ import SendIcon from '@mui/icons-material/Send';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
-import Typewriter from 'typewriter-effect';
 
 // MUI Icons
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -23,6 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 // Animation Libraries
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { TypeAnimation } from 'react-type-animation';
 
 const axios = require('axios');
 const PROD_BASE_URL =
@@ -140,6 +140,20 @@ function App() {
           <Typography variant='h3' fontWeight='bold'>
             URL Shortener
           </Typography>
+          <TypeAnimation
+            sequence={[
+              'Shorten any valid URL: https://www.google.com',
+              2000,
+              'Shorten any valid URL: https://www.tech.gov.sg/',
+              2000,
+              'Shorten any valid URL: https://github.com/mohawker',
+              2000,
+            ]}
+            wrapper='div'
+            cursor={true}
+            repeat={Infinity}
+            style={{ fontSize: '0.75em', fontWeight: '750' }}
+          />
           <TextField
             error={isError}
             id='url-input'
