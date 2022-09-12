@@ -2,7 +2,7 @@ const express = require('express');
 const shortid = require('shortid');
 const validUrl = require('valid-url');
 const cors = require('cors');
-const pool = require('./db');
+const db = require('./db');
 const path = require('path');
 
 const app = express();
@@ -23,11 +23,8 @@ app.post('/api/create-short-url', async (req, res) => {
     const longUrl = req.body.url;
     if (validUrl.isUri(longUrl)) {
       // Check
-      const getUrlResults = await pool.query(
-        `SELECT short_url FROM links WHERE long_url='${longUrl}' LIMIT 1`
-      );
-      if (getUrlResults.rows.length != 0) {
-        const shortUrl = getUrlResults.rows[0].short_url;
+      let shortUrl = await db.getShortUrl(longUrl);
+      if (shortUrl !== undefined) {
         return res.json({
           message: `URL was shortened before. Short URL is: ${shortUrl}`,
           short_url: shortUrl,
@@ -36,11 +33,8 @@ app.post('/api/create-short-url', async (req, res) => {
       }
       // If not in DB, create Short URL Code
       const shortUrlCode = shortid.generate();
-      const shortUrl =
-        req.protocol + '://' + req.get('host') + '/' + shortUrlCode;
-      await pool.query(
-        `INSERT INTO links(long_url,short_url_code,short_url) VALUES ('${longUrl}', '${shortUrlCode}', '${shortUrl}')`
-      );
+      shortUrl = req.protocol + '://' + req.get('host') + '/' + shortUrlCode;
+      await db.insertLinkEntry(longUrl, shortUrl, shortUrlCode);
       res.json({
         message: `Long URL ${longUrl} shortened to Short URL ${shortUrl}`,
         short_url: shortUrl,
@@ -58,10 +52,8 @@ app.post('/api/create-short-url', async (req, res) => {
 app.get('/:code', async (req, res) => {
   try {
     let shortUrlCode = req.params.code;
-    const longUrl = await pool.query(
-      `SELECT long_url FROM links WHERE short_url_code='${shortUrlCode}' LIMIT 1`
-    );
-    res.redirect(longUrl.rows[0].long_url);
+    const longUrl = await db.getLongUrl(shortUrlCode);
+    res.redirect(longUrl);
   } catch (err) {
     return res.json({ message: `Error Message: ${err}`, type: 'failure' });
   }
