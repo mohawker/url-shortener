@@ -17,7 +17,11 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // ROUTES
-// POST: Create short_url Code given long_url
+/**
+ * POST: Create short_url and short url code given url input
+ * @name /api/create-short-url
+ * @param {string} url - Valid url such as "https://www.google.com" to be transformed into a short url string
+ */
 app.post('/api/create-short-url', async (req, res) => {
   try {
     const longUrl = req.body.url;
@@ -48,7 +52,10 @@ app.post('/api/create-short-url', async (req, res) => {
   }
 });
 
-// GET: Redirect user to Long URL
+/**
+ * GET: Redirect user to long url
+ * @name /:code
+ */
 app.get('/:code', async (req, res) => {
   try {
     let shortUrlCode = req.params.code;
