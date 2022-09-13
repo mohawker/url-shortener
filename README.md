@@ -25,6 +25,7 @@ The server will use your local database to store the tables necessary.
 - `npm run start` - To start the client on https://localhost:3000
 
 ## Demo
+![demo](https://user-images.githubusercontent.com/48997733/189914391-96e10489-31ea-447a-8781-5f0459e1af6e.gif)
 
 ## Architecture
 Node.js was used for the backend server, with a postgreSQL database. The database has two tables, *teams* and *matches*
