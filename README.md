@@ -1,6 +1,7 @@
 # url-shortener
 
-URL Shortening Client &amp; Service built with React.js, Node.js and PostgreSQL
+URL Shortening Client &amp; Service built with React.js, Node.js and PostgreSQL by Er Jun Jia
+
 Input any valid URL and the webpage will return a shortened URL string which will redirect you back to the original URL.  
 
 Both server and client are hosted on Heroku at https://shorten-this-url-please.herokuapp.com/
